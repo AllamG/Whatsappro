@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "889686096227",
+    "project_id": "whatsappro-ee5d5",
+    "storage_bucket": "whatsappro-ee5d5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:889686096227:android:6a45c713c5a2089ad7bb56",
+        "android_client_info": {
+          "package_name": "com.example.whatsappro"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "889686096227-rhjs2ldhrt6po8uicomfugnru193r0e6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCStO-szz9yw3xgL27op2mQ0WikjtoU-Y4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "889686096227-rhjs2ldhrt6po8uicomfugnru193r0e6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
