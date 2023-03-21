@@ -7,6 +7,11 @@
         app:showAsAction="never">
     </item>
     <item
+        android:title="Crear Grupo"
+        android:id="@+id/crear_grupo_menu"
+        app:showAsAction="never">
+    </item>
+    <item
         android:title="Mi perfil"
         android:id="@+id/miperfil_menu"
         app:showAsAction="never">

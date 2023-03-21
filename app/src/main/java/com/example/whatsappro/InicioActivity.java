@@ -1,17 +1,23 @@
 package com.example.whatsappro;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -28,7 +34,7 @@ public class InicioActivity extends AppCompatActivity {
     private AcesoTabsAdapter myacesoTabsAdapter;
     private String CurrentUserId;
     private FirebaseAuth mAuth;
-    private DatabaseReference UserRef;
+    private DatabaseReference UserRef, RootRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +51,8 @@ public class InicioActivity extends AppCompatActivity {
         mytabLayout = (TabLayout) findViewById(R.id.main_tabs);
         mytabLayout.setupWithViewPager(myviewPager);
 
-        UserRef = FirebaseDatabase.getInstance().getReference().child("usuarios");
+        UserRef = FirebaseDatabase.getInstance().getReference().child("Usuario");
+        RootRef = FirebaseDatabase.getInstance().getReference().child("Grupos");
         mAuth = FirebaseAuth.getInstance();
         CurrentUserId = mAuth.getCurrentUser().getUid();
     }
@@ -104,6 +111,10 @@ public class InicioActivity extends AppCompatActivity {
             Toast.makeText(this, "Buscar Amigos", Toast.LENGTH_SHORT).show();
 
         }
+        if (item.getItemId() == R.id.crear_grupo_menu){
+            CrearNuevoGrupo();
+
+        }
         if (item.getItemId() == R.id.miperfil_menu){
             Intent intent = new Intent(InicioActivity.this, PerfilActivity.class);
             startActivity(intent);
@@ -116,4 +127,48 @@ public class InicioActivity extends AppCompatActivity {
         }
         return true;
     }
+
+    private void CrearNuevoGrupo() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(InicioActivity.this, R.style.AlertDialog);
+        builder.setTitle("Nombre del grupo:");
+        final EditText nombregrupo = new EditText(InicioActivity.this);
+        nombregrupo.setHint("ejemplo");
+        builder.setView(nombregrupo);
+
+        builder.setPositiveButton("Crear", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int i) {
+                String nombreg = nombregrupo.getText().toString();
+                if (TextUtils.isEmpty(nombreg)){
+                    Toast.makeText(InicioActivity.this, "Ingrese el nombre del grupo", Toast.LENGTH_SHORT).show();
+                }else{
+                    CrearGrupoFirebase(nombreg);
+                }
+            }
+        }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int i) {
+                dialog.cancel();
+            }
+        });
+        builder.show();
+
+    }
+
+    private void CrearGrupoFirebase(String nombreg) {
+
+        RootRef.child(nombreg).setValue("").addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()){
+                    Toast.makeText(InicioActivity.this, "Grupo creado con exito", Toast.LENGTH_SHORT).show();
+                }else{
+                    String error = task.getException().getMessage().toString();
+                    Toast.makeText(InicioActivity.this, "Error"+error, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+
 }

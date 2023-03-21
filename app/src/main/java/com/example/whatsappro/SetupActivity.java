@@ -40,10 +40,10 @@ public class SetupActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private DatabaseReference UserRef;
     private ProgressDialog dialog;
-    private String CurrenUserID;
+    private String CurrentUserID;
 
-    final static int Gallery_PICK =1;
-    private StorageReference UserProfileImagen;
+
+
     private Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,9 +61,8 @@ public class SetupActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Completa tu perfil");
         dialog = new ProgressDialog(this);
         auth=FirebaseAuth.getInstance();
-        CurrenUserID= auth.getCurrentUser().getUid();
+        CurrentUserID= auth.getCurrentUser().getUid();
         UserRef= FirebaseDatabase.getInstance().getReference().child("Usuario");
-        UserProfileImagen= FirebaseStorage.getInstance().getReference().child("ImagesPerfil");
 
         guardarinfo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,16 +71,6 @@ public class SetupActivity extends AppCompatActivity {
             }
         });
 
-        imagen_setup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                intent.setType("image/*");
-                startActivityForResult(intent,Gallery_PICK);
-
-            }
-        });
 
     }
     private void GuardarInformacion() {
@@ -108,7 +97,7 @@ public class SetupActivity extends AppCompatActivity {
             map.put("edad",eda);
             map.put("Estado",est);
 
-            UserRef.child(CurrenUserID).updateChildren(map).addOnCompleteListener(new OnCompleteListener() {
+            UserRef.child(CurrentUserID).updateChildren(map).addOnCompleteListener(new OnCompleteListener() {
                 @Override
                 public void onComplete(@NonNull Task task) {
                     if(task.isSuccessful()){

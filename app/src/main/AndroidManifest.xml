@@ -16,6 +16,9 @@
         android:theme="@style/Theme.Whatsappro"
         tools:targetApi="31">
         <activity
+            android:name=".GrupoChatActivity"
+            android:exported="false" />
+        <activity
             android:name=".PerfilActivity"
             android:exported="false" />
         <activity
