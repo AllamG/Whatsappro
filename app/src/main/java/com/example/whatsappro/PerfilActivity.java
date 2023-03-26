@@ -50,7 +50,7 @@ public class PerfilActivity extends AppCompatActivity {
         auth= FirebaseAuth.getInstance();
         CurrrentUserID = auth.getCurrentUser().getUid();
 
-        RootRef.child("Usuarios").child(CurrrentUserID).addValueEventListener(new ValueEventListener() {
+        RootRef.child("Usuario").child(CurrrentUserID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
@@ -58,14 +58,14 @@ public class PerfilActivity extends AppCompatActivity {
                     String nom1 = snapshot.child("nombre").getValue().toString();
                     String ciu1 = snapshot.child("ciudad").getValue().toString();
                     String eda1 = snapshot.child("edad").getValue().toString();
-                    String gen1 = snapshot.child("generacion").getValue().toString();
-                    String est1 = snapshot.child("estado").getValue().toString();
+                    String gen1 = snapshot.child("genero").getValue().toString();
+
 
                     nombre.setText(nom1);
                     ciudad.setText(ciu1);
                     edad.setText(eda1);
                     genero.setText(gen1);
-                    estado.setText(est1);
+
 
                 }
             }
@@ -99,7 +99,7 @@ public class PerfilActivity extends AppCompatActivity {
             profile.put("nombre", nom);
             profile.put("ciudad", ciu);
             profile.put("genero", gen);
-            profile.put("estado", est);
+            profile.put("Estado", est);
             profile.put("edad", eda);
             RootRef.child("Usuario").child(CurrrentUserID).setValue(profile)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -119,7 +119,7 @@ public class PerfilActivity extends AppCompatActivity {
 
     private void EnviaralInicio() {
         Intent intent = new Intent(PerfilActivity.this, InicioActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK| Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
     }
@@ -134,6 +134,6 @@ public class PerfilActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar_Perfil);
 
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Perfil");
+        getSupportActionBar().setTitle( "Mi Perfil");
     }
 }

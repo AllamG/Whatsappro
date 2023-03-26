@@ -1,6 +1,7 @@
 package com.example.whatsappro;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 import androidx.appcompat.widget.Toolbar;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -25,13 +27,14 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Iterator;
 
 public class GrupoChatActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private ImageView EnviarMensajeBoton;
     private EditText MensajeUsuario;
     private ScrollView scrollView;
-    private TextView verMensaje;
+    private TextView verMensajes;
     private String CurrentGrupoNombre, CurrentUserId, CurrentUserName, Fecha, Hora;
     private FirebaseAuth auth;
     private DatabaseReference UserRef, GrupoRef, GrupoMensajekeyRef;
@@ -55,10 +58,47 @@ public class GrupoChatActivity extends AppCompatActivity {
             public void onClick(View v) {
                 GuardarMensajeDb();
                 MensajeUsuario.setText("");
+                scrollView.fullScroll(ScrollView.FOCUS_DOWN);
+
             }
         });
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        GrupoRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                if(snapshot.exists()){
+                    MostrarMensajes(snapshot);
+                }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                if(snapshot.exists()){
+                    MostrarMensajes(snapshot);
+                }
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
 
 
     private void IniciarObjetos() {
@@ -69,7 +109,7 @@ public class GrupoChatActivity extends AppCompatActivity {
         EnviarMensajeBoton=(ImageView) findViewById(R.id.enviar_mensaje_grupo);
         MensajeUsuario=(EditText) findViewById(R.id.texto_grupo_chat);
         scrollView=(ScrollView)findViewById(R.id.mi_scroll_view);
-        verMensaje=(TextView) findViewById(R.id.texto_grupo_chat);
+        verMensajes=(TextView) findViewById(R.id.grupo_chat_texto);
 
 
     }
@@ -80,7 +120,7 @@ public class GrupoChatActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 
                 if(snapshot.exists()){
-                    CurrentGrupoNombre = snapshot.child("nombre").getValue().toString();
+                    CurrentUserName = snapshot.child("nombre").getValue().toString();
                 }
 
             }
@@ -123,5 +163,22 @@ public class GrupoChatActivity extends AppCompatActivity {
 
         }
     }
+    private void MostrarMensajes(DataSnapshot snapshot) {
+        Iterator iterator = snapshot.getChildren().iterator();
+
+        while (iterator.hasNext()){
+            String fecha= (String) ((DataSnapshot)iterator.next()).getValue();
+            String hora = (String) ((DataSnapshot)iterator.next()).getValue();
+            String mensaje = (String) ((DataSnapshot)iterator.next()).getValue();
+            String nombre = (String) ((DataSnapshot)iterator.next()).getValue();
+
+            verMensajes.append(nombre+"\n"+mensaje+"\n"+fecha+" "+hora+"\n\n\n");
+
+            scrollView.fullScroll(ScrollView.FOCUS_DOWN);
+
+        }
+    }
+
+
 
 }

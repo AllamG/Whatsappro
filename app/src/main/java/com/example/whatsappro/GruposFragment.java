@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -70,6 +72,10 @@ public class GruposFragment extends Fragment {
         list_view.setAdapter(arrayAdapter);
 
     }
+
+
+
+
     private void MostrarListaGrupos() {
         GrupoRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -95,4 +101,6 @@ public class GruposFragment extends Fragment {
             }
         });
     }
+
+
 }

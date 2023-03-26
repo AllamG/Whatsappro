@@ -74,6 +74,7 @@ public class InicioActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (!snapshot.hasChild(currentUserID)){
+                    CompletarDatoUsuario();
 
                 }
 
@@ -84,7 +85,12 @@ public class InicioActivity extends AppCompatActivity {
             }
         });
     }
-
+    private void CompletarDatoUsuario(){
+        Intent intent = new Intent(InicioActivity.this, SetupActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK| Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+    }
 
 
     private void EnviarAlogin(){
@@ -93,6 +99,12 @@ public class InicioActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
+    private void TBuscarAmigosWhats() {
+        Intent intent = new Intent(InicioActivity.this, BuscarAmigosActivity.class);
+        startActivity(intent);
+
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -103,12 +115,13 @@ public class InicioActivity extends AppCompatActivity {
 
     }
 
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         super.onOptionsItemSelected(item);
 
         if (item.getItemId() == R.id.buscar_contactos_menu){
-            Toast.makeText(this, "Buscar Amigos", Toast.LENGTH_SHORT).show();
+            TBuscarAmigosWhats();
 
         }
         if (item.getItemId() == R.id.crear_grupo_menu){
@@ -127,6 +140,7 @@ public class InicioActivity extends AppCompatActivity {
         }
         return true;
     }
+
 
     private void CrearNuevoGrupo() {
         AlertDialog.Builder builder = new AlertDialog.Builder(InicioActivity.this, R.style.AlertDialog);
@@ -169,6 +183,7 @@ public class InicioActivity extends AppCompatActivity {
             }
         });
     }
+
 
 
 }
