@@ -9,6 +9,18 @@
     <include
         android:id="@+id/toolbar_setup"
         layout="@layout/toolbar_principal"></include>
+
+
+    <ScrollView
+        android:id="@+id/mi_scroll_view1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar_setup">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
     <EditText
         android:id="@+id/nombre_setup"
         android:layout_width="match_parent"
@@ -92,5 +104,8 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:minHeight="48dp"/>
+        </RelativeLayout>
+    </ScrollView>
+
 
 </RelativeLayout>

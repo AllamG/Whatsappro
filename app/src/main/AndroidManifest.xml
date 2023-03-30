@@ -16,6 +16,9 @@
         android:theme="@style/Theme.Whatsappro"
         tools:targetApi="31">
         <activity
+            android:name=".PerfilActivity2"
+            android:exported="false" />
+        <activity
             android:name=".BuscarAmigosActivity"
             android:exported="false"
             android:parentActivityName=".InicioActivity" />

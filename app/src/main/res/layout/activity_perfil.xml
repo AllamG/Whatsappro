@@ -10,6 +10,18 @@
     <include
         android:id="@+id/toolbar_Perfil"
         layout="@layout/toolbar_principal"></include>
+
+    <ScrollView
+        android:id="@+id/mi_scroll_view12"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar_Perfil">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/imagen_perfil"
         android:layout_width="150dp"
@@ -91,6 +103,7 @@
         android:text="Actualizar Informacion"
         android:background="@drawable/botones"
         android:textColor="#ffffff"/>
-
+        </RelativeLayout>
+    </ScrollView>
 
 </RelativeLayout>
