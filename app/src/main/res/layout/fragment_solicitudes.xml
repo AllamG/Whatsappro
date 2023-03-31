@@ -3,12 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ContactosFragment">
-
-    <!-- TODO: Update blank fragment layout -->
+    tools:context=".SolicitudesFragment">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/contactoslista"
+        android:id="@+id/reciclersolicitudeslista"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </RelativeLayout>

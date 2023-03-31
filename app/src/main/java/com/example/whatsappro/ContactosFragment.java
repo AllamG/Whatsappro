@@ -2,63 +2,120 @@ package com.example.whatsappro;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ContactosFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
+
+import java.util.concurrent.Callable;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+
+
 public class ContactosFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private View ContactosView;
+    private RecyclerView ContactosLista;
+    private DatabaseReference ContactosRef, UserRef;
+    private FirebaseAuth auth;
+    private String CurrentUserId;
 
     public ContactosFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ContactosFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ContactosFragment newInstance(String param1, String param2) {
-        ContactosFragment fragment = new ContactosFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_contactos, container, false);
+
+        ContactosView = inflater.inflate(R.layout.fragment_contactos,container,false);
+        auth=FirebaseAuth.getInstance();
+        CurrentUserId=auth.getCurrentUser().getUid();
+        ContactosRef= FirebaseDatabase.getInstance().getReference().child("Contactos").child(CurrentUserId);
+        UserRef=FirebaseDatabase.getInstance().getReference().child("Usuarios");
+        ContactosLista=(RecyclerView)ContactosView.findViewById(R.id.contactoslista);
+        ContactosLista.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        return ContactosView;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        FirebaseRecyclerOptions options = new FirebaseRecyclerOptions.Builder<Contactos>()
+                .setQuery(ContactosRef, Contactos.class).build();
+
+        FirebaseRecyclerAdapter<Contactos, ContactosViewHolder>adapter = new FirebaseRecyclerAdapter<Contactos, ContactosViewHolder>(options) {
+            @Override
+            protected void onBindViewHolder(@NonNull ContactosViewHolder holder, int position, @NonNull Contactos model) {
+                String userIds = getRef(position).getKey();
+                UserRef.child(userIds).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                        if(snapshot.hasChild("imagen")){
+                            String nombreu = snapshot.child("nombre").getValue().toString();
+                            String ciudadu = snapshot.child("ciudad").getValue().toString();
+                            String estadou = snapshot.child("estado").getValue().toString();
+                            String imagenu = snapshot.child("imagen").getValue().toString();
+
+                            holder.nombre.setText(nombreu);
+                            holder.ciudad.setText(ciudadu);
+                            holder.estado.setText(estadou);
+                            Picasso.get().load(imagenu).placeholder(R.drawable.jk).into(holder.imagen);
+                        }else {
+                            String nombreu = snapshot.child("nombre").getValue().toString();
+                            String ciudadu = snapshot.child("ciudad").getValue().toString();
+                            String estadou = snapshot.child("estado").getValue().toString();
+                            holder.nombre.setText(nombreu);
+                            holder.ciudad.setText(ciudadu);
+                            holder.estado.setText(estadou);
+                        }
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                    }
+                });
+            }
+
+            @NonNull
+            @Override
+            public ContactosViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.user_display_layout,parent,false);
+                ContactosViewHolder viewHolder = new ContactosViewHolder(view);
+                return viewHolder;
+            }
+        };
+        ContactosLista.setAdapter(adapter);
+        adapter.startListening();
+    }
+
+    public static class ContactosViewHolder extends RecyclerView.ViewHolder{
+        TextView nombre, ciudad, estado;
+        CircleImageView imagen;
+        public ContactosViewHolder(@NonNull View itemView) {
+            super(itemView);
+
+            nombre=itemView.findViewById(R.id.user_nombre);
+            ciudad=itemView.findViewById(R.id.user_ciudad);
+            estado=itemView.findViewById(R.id.user_estado);
+            imagen=itemView.findViewById(R.id.user_image_perfil);
+        }
     }
 }

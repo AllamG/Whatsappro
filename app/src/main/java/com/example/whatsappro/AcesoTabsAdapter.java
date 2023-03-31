@@ -24,6 +24,9 @@ public class AcesoTabsAdapter extends FragmentPagerAdapter {
             case 2:
                 ContactosFragment contactosFragment= new ContactosFragment();
                 return contactosFragment;
+            case 3:
+                SolicitudesFragment solicitudesFragment= new SolicitudesFragment();
+                return solicitudesFragment;
             default:
                 return null;
         }
@@ -31,7 +34,7 @@ public class AcesoTabsAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 3;
+        return 4;
     }
 
     @Nullable
@@ -39,14 +42,14 @@ public class AcesoTabsAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         switch (position){
             case 0:
-
                 return "Chats";
             case 1:
 
                 return "Grupos";
             case 2:
-
                 return "Contactos";
+            case 3:
+                return "Solicitudes";
             default:
                 return null;
         }
